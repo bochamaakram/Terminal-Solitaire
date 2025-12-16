@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terminal Solitaire</title>
+    <link rel="stylesheet" href="solitaire.css" />
+  </head>
+  <body>
+    <div class="terminal-window">
+      <div class="game-board" id="game-board">
+        <div class="top-section">
+          <div class="piles-group">
+            <div class="slot" id="stock" onclick="drawCard()"></div>
+            <div class="slot" id="waste"></div>
+          </div>
+
+          <div class="piles-group">
+            <div class="slot foundation" data-suit="h" id="f-h"></div>
+            <div class="slot foundation" data-suit="d" id="f-d"></div>
+            <div class="slot foundation" data-suit="c" id="f-c"></div>
+            <div class="slot foundation" data-suit="s" id="f-s"></div>
+          </div>
+        </div>
+
+        <div class="tableau">
+          <div class="column" id="col-0"></div>
+          <div class="column" id="col-1"></div>
+          <div class="column" id="col-2"></div>
+          <div class="column" id="col-3"></div>
+          <div class="column" id="col-4"></div>
+          <div class="column" id="col-5"></div>
+          <div class="column" id="col-6"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="solitaire.js"></script>
+  </body>
+</html>

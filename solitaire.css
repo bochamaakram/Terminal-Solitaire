@@ -1,0 +1,468 @@
+:root {
+  --bg-color: #1a1b1e;
+  --card-width: 80px;
+  --card-height: 110px;
+  --card-gap: 20px;
+  --card-stack-offset: 30px;
+  --board-padding: 40px;
+  --card-font-size: 18px;
+  --text-white: #e5e5e5;
+  --text-red: #ff5555;
+  --border-color: #ffffff;
+  --font-stack: "Menlo", "Monaco", "Courier New", monospace;
+}
+
+body {
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-family: var(--font-stack);
+}
+
+/* The Terminal Window Container */
+.terminal-window {
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mac-style Title Bar */
+.title-bar {
+  height: 30px;
+  background: #2d2d2d;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  position: relative;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.close {
+  background: #ff5f56;
+}
+.minimize {
+  background: #ffbd2e;
+}
+.maximize {
+  background: #27c93f;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ccc;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Game Area */
+.game-board {
+  padding: var(--board-padding);
+  flex-grow: 1;
+  position: relative;
+  color: var(--text-white);
+  user-select: none;
+}
+
+/* Top Section: Deck, Waste, Foundations */
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.piles-group {
+  display: flex;
+  gap: var(--card-gap);
+}
+
+/* Card Slots/Placeholders */
+.slot {
+  width: var(--card-width);
+  height: var(--card-height);
+  border: 1px solid #444;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* THE CARD STYLE - mimicking ASCII */
+.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  background-color: #000;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-size: var(--card-font-size);
+  transition: top 0.2s;
+}
+
+/* Card Content positioning */
+.card-top {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  display: flex;
+  flex-direction: row;
+}
+
+.card-bottom {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  transform: rotate(180deg);
+  display: flex;
+  flex-direction: row;
+}
+
+/* Suits Colors */
+.red {
+  color: var(--text-red);
+  border-color: var(--text-red);
+}
+.black {
+  color: var(--text-white);
+  border-color: var(--text-white);
+}
+
+/* Specific overrides for the "ASCII" look */
+.red .card-top,
+.red .card-bottom {
+  color: var(--text-red);
+}
+.black .card-top,
+.black .card-bottom {
+  color: var(--text-white);
+}
+
+/* Face Down Card Style - The //// Pattern */
+.card.back {
+  border-color: var(--text-white);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    #fff 5px,
+    #fff 6px
+  );
+  background-size: 10px 10px;
+}
+
+.card.back .card-top,
+.card.back .card-bottom {
+  display: none;
+}
+
+/* The Tableau (Columns) */
+.tableau {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  width: var(--card-width);
+  min-height: 200px;
+  position: relative;
+}
+
+/* Stacking logic for columns */
+.column .card {
+  position: absolute;
+}
+
+/* Highlight selected card */
+.selected {
+  box-shadow: 0 0 10px #27c93f;
+  border-color: #27c93f !important;
+  z-index: 999 !important;
+}
+
+/* Instructions */
+.instructions {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Foundation placeholder (suit symbol) */
+.foundation-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #333;
+  opacity: 0.5;
+}
+
+/* Empty column click area */
+.empty-column {
+  width: 100%;
+  height: var(--card-height);
+  border: 1px dashed #444;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.empty-column:hover {
+  border-color: #666;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Card hover effect */
+.card:hover {
+  filter: brightness(1.1);
+}
+
+/* Slot hover when we have selection */
+.slot:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Stock pile cursor */
+#stock {
+  cursor: pointer;
+}
+
+#stock:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Empty stock indicator */
+#stock:empty::after {
+  content: "↻";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+  color: #444;
+}
+
+/* ============================================
+   Mobile Responsive Styles
+   ============================================ */
+
+/* Tablets and smaller desktops */
+@media (max-width: 1024px) {
+  :root {
+    --card-width: 70px;
+    --card-height: 96px;
+    --card-gap: 15px;
+    --card-stack-offset: 25px;
+    --board-padding: 25px;
+    --card-font-size: 16px;
+  }
+
+  .top-section {
+    margin-bottom: 30px;
+  }
+}
+
+/* Large phones (landscape) and small tablets */
+@media (max-width: 768px) {
+  :root {
+    --card-width: 55px;
+    --card-height: 75px;
+    --card-gap: 8px;
+    --card-stack-offset: 20px;
+    --board-padding: 15px;
+    --card-font-size: 14px;
+  }
+
+  .top-section {
+    margin-bottom: 20px;
+  }
+
+  .column {
+    min-height: 150px;
+  }
+
+  .card-top {
+    top: 3px;
+    left: 3px;
+  }
+
+  .card-bottom {
+    bottom: 3px;
+    right: 3px;
+  }
+
+  .foundation-placeholder {
+    font-size: 24px;
+  }
+
+  #stock:empty::after {
+    font-size: 20px;
+  }
+}
+
+/* Standard phones (portrait) */
+@media (max-width: 480px) {
+  :root {
+    --card-width: calc((100vw - 50px) / 7 - 4px);
+    --card-height: calc(var(--card-width) * 1.4);
+    --card-gap: 4px;
+    --card-stack-offset: 18px;
+    --board-padding: 10px;
+    --card-font-size: 11px;
+  }
+
+  .terminal-window {
+    border-radius: 0;
+  }
+
+  .title-bar {
+    display: none;
+  }
+
+  .game-board {
+    padding: var(--board-padding);
+    padding-top: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .top-section {
+    margin-bottom: 15px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+
+  .piles-group {
+    gap: var(--card-gap);
+  }
+
+  .tableau {
+    gap: var(--card-gap);
+  }
+
+  .column {
+    min-height: 120px;
+  }
+
+  .card {
+    border-radius: 4px;
+    border-width: 1px;
+  }
+
+  .slot {
+    border-radius: 4px;
+  }
+
+  .card-top {
+    top: 2px;
+    left: 2px;
+  }
+
+  .card-bottom {
+    display: none;
+  }
+
+  .foundation-placeholder {
+    font-size: 18px;
+  }
+
+  #stock:empty::after {
+    font-size: 16px;
+  }
+
+  .instructions {
+    display: none;
+  }
+
+  .empty-column {
+    height: var(--card-height);
+  }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  :root {
+    --card-width: calc((100vw - 40px) / 7 - 3px);
+    --card-height: calc(var(--card-width) * 1.35);
+    --card-gap: 3px;
+    --card-stack-offset: 15px;
+    --board-padding: 8px;
+    --card-font-size: 10px;
+  }
+
+  .foundation-placeholder {
+    font-size: 14px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .card:active {
+    transform: scale(0.95);
+  }
+
+  .selected {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(39, 201, 63, 0.5);
+  }
+
+  .card:hover {
+    filter: none;
+  }
+
+  .slot:hover {
+    background-color: transparent;
+  }
+
+  #stock:hover {
+    background-color: transparent;
+  }
+
+  #stock:active {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Landscape on phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --card-width: 50px;
+    --card-height: 68px;
+    --card-stack-offset: 15px;
+    --board-padding: 10px;
+    --card-font-size: 12px;
+  }
+
+  .top-section {
+    margin-bottom: 10px;
+  }
+
+  .column {
+    min-height: 100px;
+  }
+}
